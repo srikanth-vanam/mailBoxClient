@@ -51,7 +51,7 @@ const SignUP = () => {
       .then((data) => {
         // dispatch(Authactions.setToken(data.idToken));
         // splitting email and removing '.com' from it
-        const email = obj.email.split(".com")[0];
+        const email = obj.email.split("@")[0];
         // dispatch(Authactions.setEmailId(email));
         console.log("added token,email to store");
         localStorage.setItem("token", data.idToken);
