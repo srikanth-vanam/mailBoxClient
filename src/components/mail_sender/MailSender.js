@@ -1,7 +1,15 @@
 import React, { useRef, useState } from "react";
-import { Button, Card, Form, FormControl, FormLabel } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Container,
+  Form,
+  FormControl,
+  FormLabel,
+} from "react-bootstrap";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import SideBar from "../sidebar/Sidebar";
 
 const MailSender = () => {
   const [editorState, setEditorState] = useState(null);
@@ -61,34 +69,41 @@ const MailSender = () => {
   };
 
   return (
-    <div className="mt-1 m-auto w-50">
-      <h2 className="text-center">Compose Mail</h2>
-      <Form onSubmit={submitHandler}>
-        <FormLabel>To</FormLabel>
-        <FormControl
-          placeholder="Sender e-mail Id"
-          ref={toInputRef}
-        ></FormControl>
-        <FormLabel>Subject</FormLabel>
-        <FormControl
-          placeholder="Enter subject"
-          ref={subjectInputRef}
-        ></FormControl>
-        <FormLabel>Body</FormLabel>
-        <Card className="p-2">
-          <Editor
-            editorState={editorState}
-            toolbarClassName="toolbarClassName"
-            wrapperClassName="wrapperClassName"
-            editorClassName="editorClassName"
-            onEditorStateChange={handleEditorStateChange}
-          />
-        </Card>
-        <Button className="mt-2 d-block m-auto" type="submit">
-          Send
-        </Button>
-      </Form>
-    </div>
+    <>
+      <h3 className="text-center m-1">Welcome to your mail Box</h3>
+      <hr />
+      <Container fluid className="d-flex mt-3">
+        <SideBar />
+        <div className="mt-1 m-auto w-75">
+          <h2 className="text-center">Compose Mail</h2>
+          <Form onSubmit={submitHandler}>
+            <FormLabel>To</FormLabel>
+            <FormControl
+              placeholder="Sender e-mail Id"
+              ref={toInputRef}
+            ></FormControl>
+            <FormLabel>Subject</FormLabel>
+            <FormControl
+              placeholder="Enter subject"
+              ref={subjectInputRef}
+            ></FormControl>
+            <FormLabel>Body</FormLabel>
+            <Card className="p-2">
+              <Editor
+                editorState={editorState}
+                toolbarClassName="toolbarClassName"
+                wrapperClassName="wrapperClassName"
+                editorClassName="editorClassName"
+                onEditorStateChange={handleEditorStateChange}
+              />
+            </Card>
+            <Button className="mt-2 d-block m-auto" type="submit">
+              Send
+            </Button>
+          </Form>
+        </div>
+      </Container>
+    </>
   );
 };
 
