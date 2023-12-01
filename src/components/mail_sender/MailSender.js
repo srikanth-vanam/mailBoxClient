@@ -1,12 +1,5 @@
 import React, { useRef, useState } from "react";
-import {
-  Button,
-  Card,
-  Form,
-  FormControl,
-  FormLabel,
-  FormText,
-} from "react-bootstrap";
+import { Button, Card, Form, FormControl, FormLabel } from "react-bootstrap";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
@@ -14,70 +7,59 @@ const MailSender = () => {
   const [editorState, setEditorState] = useState(null);
   const toInputRef = useRef();
   const subjectInputRef = useRef();
+  //
   const handleEditorStateChange = (newEditorState) => {
     // Handle changes to the editor state here
     setEditorState(newEditorState);
   };
   //
-  const submitHandler = (e) => {
+  const mailFunction = async (category, senderMail, receiverMail, mailObj) => {
+    try {
+      let res = await fetch(
+        `https://authentication-react-45852-default-rtdb.firebaseio.com/${category}/${senderMail}/${receiverMail}.json`,
+        {
+          method: "POST",
+          body: JSON.stringify(mailObj),
+        }
+      );
+      if (!res.ok) {
+        throw new Error("cannot post data to database");
+      }
+      const data = await res.json();
+      console.log(data);
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+  //
+  const submitHandler = async (e) => {
     e.preventDefault();
-    const mailTo = toInputRef.current.value.split("@")[0];
+
+    const receiver = toInputRef.current.value.split("@")[0];
+    const sender = localStorage.getItem("email");
+
     const mailObj = {
-      to: mailTo,
+      from: sender,
+      to: receiver,
       subject: subjectInputRef.current.value,
       body: editorState ? editorState.getCurrentContent().getPlainText() : "", // Extract plain text from the editor state
     };
     console.log(mailObj);
-    const sender=localStorage.getItem("email");
-    fetch(
-        // `https://expense-tracker-fea86-default-rtdb.firebaseio.com/sentMails/${mailTo}.json`,
-      `https://authentication-react-45852-default-rtdb.firebaseio.com/sentMails/${sender}/${mailTo}.json`,
-      {
-        method: "POST",
-        body: JSON.stringify(mailObj),
-      }
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("cannot post/update data to database");
-        } else {
-          return res.json();
-        }
-      })
-      .then((data) => {
-        console.log(data);
-        // getHandler();
-        // dispatch(expenseActions.setEditId(null));
-        // dispatch(expenseActions.setUpdateBool(false));
-        toInputRef.current.value="";
-        subjectInputRef.current.value="";
-        setEditorState(null);
-        fetch(
-            // `https://expense-tracker-fea86-default-rtdb.firebaseio.com/sentMails/${mailTo}.json`,
-          `https://authentication-react-45852-default-rtdb.firebaseio.com/receivedMails/${mailTo}/${sender}.json`,
-          {
-            method: "POST",
-            body: JSON.stringify(mailObj),
-          }
-        )
-          .then((res) => {
-            if (!res.ok) {
-              throw new Error("cannot post/update data to database");
-            } else {
-              return res.json();
-            }
-          })
-          .then((data) => {
-            console.log(data);
-          })
-          .catch((err) => {
-            alert(err.message);
-          });
-      })
-      .catch((err) => {
-        alert(err.message);
-      });
+
+    try {
+      await Promise.all([
+        mailFunction("sentMails", sender, receiver, mailObj),
+        mailFunction("receivedMails", receiver, sender, mailObj),
+      ]);
+    } catch (error) {
+      console.error("error in submitting mail", error);
+    }
+    // clearing mail-form fields
+    toInputRef.current.value = "";
+    subjectInputRef.current.value = "";
+    setEditorState(null);
   };
+
   return (
     <div className="mt-1 m-auto w-50">
       <h2 className="text-center">Compose Mail</h2>
