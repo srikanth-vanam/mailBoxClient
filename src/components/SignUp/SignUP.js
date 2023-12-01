@@ -1,18 +1,20 @@
 import { useRef, useState } from "react";
 import { Card, Form, FormControl, FormLabel, Button } from "react-bootstrap";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const SignUP = () => {
   const [isLogin, setIsLogin] = useState(false);
+  const history=useHistory();
   //Inputs
-  const emailInputRef=useRef();
-  const passwordInputRef=useRef();
-  // 
-  const loginHandler=()=>{
-    setIsLogin((prevState)=>{
+  const emailInputRef = useRef();
+  const passwordInputRef = useRef();
+  //
+  const loginHandler = () => {
+    setIsLogin((prevState) => {
       return !prevState;
-    })
-  }
-  // 
+    });
+  };
+  //
   const submitHandler = (e) => {
     e.preventDefault();
     const userCredentials = {
@@ -57,7 +59,7 @@ const SignUP = () => {
         console.log("added token to localStorage");
         console.log(data.idToken);
         console.log("user registered successfully");
-        // history.replace("/home");
+        history.replace("/home");
       })
       .catch((err) => {
         alert(err.message);
@@ -69,23 +71,40 @@ const SignUP = () => {
       <Card className="w-25 mt-5 m-auto p-2">
         <h2 className="m-auto">{isLogin ? "Login" : "SignUP"}</h2>
         <Form onSubmit={submitHandler}>
-          <FormLabel htmlFor="email">
-            Email
-          </FormLabel>
-          <FormControl type="email" className="w-90%" placeholder="Enter Email" required ref={emailInputRef}></FormControl>
+          <FormLabel htmlFor="email">Email</FormLabel>
+          <FormControl
+            type="email"
+            className="w-90%"
+            placeholder="Enter Email"
+            required
+            ref={emailInputRef}
+          ></FormControl>
           <FormLabel htmlFor="password">Password</FormLabel>
-          <FormControl type="password"placeholder="Enter Password" ref={passwordInputRef} required></FormControl>
+          <FormControl
+            type="password"
+            placeholder="Enter Password"
+            ref={passwordInputRef}
+            required
+          ></FormControl>
           {!isLogin ? (
             <>
               <FormLabel htmlFor="c-pswd">Confirm Password</FormLabel>
-              <FormControl required placeholder="Re-type Password" ></FormControl>
+              <FormControl
+                required
+                placeholder="Re-type Password"
+              ></FormControl>
             </>
           ) : (
             ""
           )}
-          <Button className=" m-auto mt-2 d-block" type="submit" >
-            {isLogin ? "Login" : "Sign Up"}
-          </Button>
+          <div className="d-flex flex-column">
+            <Button className=" m-auto mt-2" type="submit">
+              {isLogin ? "Login" : "Sign Up"}
+            </Button>
+            <Button className="text-danger" variant="" >
+              forgot Password?
+            </Button>
+          </div>
         </Form>
         <Button
           className=" d-block m-auto mt-2"

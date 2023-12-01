@@ -1,11 +1,17 @@
 import React from "react";
 import SignUP from "./components/SignUp/SignUP";
+import Home from "./components/Home/Home";
+import { Route } from "react-router-dom/cjs/react-router-dom.min";
 
 function App() {
   return (
     <>
-      {/* <h1>Hi there!</h1> */}
-      <SignUP />
+      <Route exact path="/">
+        <SignUP />
+      </Route>
+      <Route path="/home">
+        <Home />
+      </Route>
     </>
   );
 }
