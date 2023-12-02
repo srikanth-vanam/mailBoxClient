@@ -72,9 +72,9 @@ const MailSender = () => {
     <>
       <h3 className="text-center m-1">Welcome to your mail Box</h3>
       <hr />
-      <Container fluid className="d-flex mt-3">
+      <Container fluid className="d-flex mt-3" style={{ height: "87vh" }}>
         <SideBar />
-        <div className="mt-1 m-auto w-75">
+        <div className="mt-1 m-auto w-75 h-100">
           <h2 className="text-center">Compose Mail</h2>
           <Form onSubmit={submitHandler}>
             <FormLabel>To</FormLabel>
@@ -95,6 +95,10 @@ const MailSender = () => {
                 wrapperClassName="wrapperClassName"
                 editorClassName="editorClassName"
                 onEditorStateChange={handleEditorStateChange}
+                style={{
+                  height: "300px", // Set the desired height
+                  overflowY: "auto", // Enable vertical scrolling
+                }}
               />
             </Card>
             <Button className="mt-2 d-block m-auto" type="submit">
