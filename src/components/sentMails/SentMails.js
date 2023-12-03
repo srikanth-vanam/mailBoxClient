@@ -7,7 +7,8 @@ import MailList from "../mailList/MailList";
 import { Container, Card } from "react-bootstrap";
 
 const SentMails = () => {
-  const email = useSelector((state) => state.authenticate.emailId);
+  // const email = useSelector((state) => state.authenticate.emailId);
+  const email = localStorage.getItem("email");
   const sentMailItems = useSelector((state) => state.mailData.sentMailItems);
   const dispatch = useDispatch();
 
@@ -31,15 +32,17 @@ const SentMails = () => {
       })
       .then((data) => {
         console.log("inside get handler of sentMails", data);
+        let mailItems = [];
         if (data) {
           // data is an object of Objects key is username, value is another object of Objects that contains mail Details
           // value Strucute is --> key is fireBase id, Value is mailObject(to,body subject,from)
-          for (const key in data) {
+          for (let key in data) {
             console.log("key is", key);
             console.log("value is", data[key]);
             const item = data[key]; // item is objectOfObjects
             console.log("item object is", item);
             // code to iterate over keys of objOfObj's
+            // innerObjectsArray is an array of objects map returns array
             const innerObjectsArray = Object.keys(item).map(
               (innerObjectKey) => {
                 const innerObjectValue = item[innerObjectKey];
@@ -48,13 +51,14 @@ const SentMails = () => {
                 return innerObjectValue;
               }
             );
+            mailItems.push(...innerObjectsArray);
+            // mailItems = [...mailItems, ...innerObjectsArray];
             console.log("innerObjects", innerObjectsArray);
-            dispatch(mailDataActions.setSentMailItems(innerObjectsArray));
-            // inputMailHandler(innerObjectsArray);
           }
         } else {
           console.log("There are no mails");
         }
+        dispatch(mailDataActions.setSentMailItems(mailItems));
       })
       .catch((err) => {
         alert(err.message);

@@ -11,13 +11,13 @@ const Home = () => {
   //
   // const email=useSelector((state)=>state.authenticate.emailId);
   const dispatch=useDispatch();
+  const localEmail=localStorage.getItem('email');
   useEffect(()=>{
-    const localEmail=localStorage.getItem('email');
     if(localEmail){
       dispatch(authenticateActions.setEmailId(localEmail));
       console.log("Home useEffect email",localEmail);
     }
-  },[])
+  },[localEmail])
   //
   return (
     <>

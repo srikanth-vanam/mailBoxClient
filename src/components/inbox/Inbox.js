@@ -6,9 +6,11 @@ import { mailDataActions } from "../ReduxStore/Store";
 
 const Inbox = () => {
   // const email = localStorage.getItem("email");
-  const receivedMailItems=useSelector((state)=>state.mailData.receivedMailItems);
-  const email=useSelector((state)=>state.authenticate.emailId)
-  const dispatch=useDispatch();
+  const receivedMailItems = useSelector(
+    (state) => state.mailData.receivedMailItems
+  );
+  const email = useSelector((state) => state.authenticate.emailId);
+  const dispatch = useDispatch();
   //
   useEffect(() => {
     getHandler();
@@ -31,13 +33,14 @@ const Inbox = () => {
       })
       .then((data) => {
         console.log("inside get handler", data);
+        let mailItems = [];
         if (data) {
           // data is an object of Objects key is username, value is another object of Objects that contains mail Details
           // value Strucute is --> key is fireBase id, Value is mailObject(to,body subject,from)
           for (const key in data) {
             console.log("key is", key);
             console.log("value is", data[key]);
-            const item = data[key];// item is objectOfObjects
+            const item = data[key]; // item is objectOfObjects
             console.log("item object is", item);
             // code to iterate over keys of objOfObj's
             const innerObjectsArray = Object.keys(item).map(
@@ -48,13 +51,14 @@ const Inbox = () => {
                 return innerObjectValue;
               }
             );
+            mailItems.push(...innerObjectsArray);
             console.log("innerObjects", innerObjectsArray);
-            dispatch(mailDataActions.setReceivedMailItems(innerObjectsArray))
             // inputMailHandler(innerObjectsArray);
           }
         } else {
           console.log("There are no mails");
         }
+        dispatch(mailDataActions.setReceivedMailItems(mailItems));
       })
       .catch((err) => {
         alert(err.message);
@@ -68,7 +72,9 @@ const Inbox = () => {
           <h5 className="text-center">There are no mails for you</h5>
         )}
         {receivedMailItems.length > 0 && <h5>Your Mails are here</h5>}
-        {receivedMailItems.length > 0 && <MailList items={receivedMailItems} receivedBool={true}/>}
+        {receivedMailItems.length > 0 && (
+          <MailList items={receivedMailItems} receivedBool={true} />
+        )}
       </Container>
     </>
   );
