@@ -1,16 +1,22 @@
 import { Card } from "react-bootstrap";
-import { NavLink,useHistory  } from "react-router-dom/cjs/react-router-dom";
-import MailViewer from "./MailView";
-const MailList = (props) => {
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
+import { mailDataActions } from "../ReduxStore/Store";
+// import MailViewer from "./MailView";
+const MailList = () => {
   //
   const history = useHistory();
-
-  const handleItemClick = (item) => {
+  const mailIsRead = useSelector((state) => state.mailData.mailIsRead);
+  const mailItems = useSelector((state) => state.mailData.mailItems);
+  const dispatch = useDispatch();
+  const handleItemClick = (id) => {
     // Navigate to the MailView route and pass the item in the state
     history.push({
-      pathname: `/mailView/${item.id}`,
-      state: { item: item },
+      pathname: `/mailView/${id}`,
+      // state: { item: item },
     });
+    // need to work on mailReader, we must have it for each item
+    dispatch(mailDataActions.mailReader(true));
   };
   //
   return (
@@ -23,7 +29,7 @@ const MailList = (props) => {
         }}
       >
         <ul className="list-unstyled">
-          {props.items.map((item) => (
+          {mailItems.map((item) => (
             <li
               key={item.id}
               className="text-dark m-1 bg-light"
@@ -32,35 +38,26 @@ const MailList = (props) => {
                 border: "2px solid black",
                 cursor: "pointer",
               }}
-              onClick={() => handleItemClick(item)}
+              onClick={() => handleItemClick(item.id)}
             >
-              <NavLink to={`/mailView/${item.id}`}>
+              <div
+                className="d-flex justify-content-between align-items-center w-50 p-4 bg-light"
+                size="lg"
+                style={{
+                  height: "50px",
+                }}
+              >
                 <div
-                  className="d-flex justify-content-between align-items-center w-50 p-4 bg-light"
-                  size="lg"
                   style={{
-                    height: "50px",
+                    height: "10px",
+                    width: "10px",
+                    borderRadius: "10px",
+                    backgroundColor: mailIsRead ? "white" : "blue",
                   }}
-                >
-                  <div
-                    style={{
-                      height: "10px",
-                      width: "10px",
-                      borderRadius: "10px",
-                      backgroundColor: "blue",
-                    }}
-                  ></div>
-                  <p>{item.from}</p>
-                  <p> {item.subject}</p>
-                  {/* <MailViewer
-                    id={item.id}
-                    subject={item.subject}
-                    body={item.body}
-                    to={item.to}
-                    from={item.from}
-                  /> */}
-                </div>
-              </NavLink>
+                ></div>
+                <p>{item.from}</p>
+                <p> {item.subject}</p>
+              </div>
             </li>
           ))}
         </ul>

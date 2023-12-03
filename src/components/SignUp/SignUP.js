@@ -1,18 +1,20 @@
 import { useRef, useState } from "react";
 import { Card, Form, FormControl, FormLabel, Button } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { authenticateActions } from "../ReduxStore/Store";
 
 const SignUP = () => {
-  const [isLogin, setIsLogin] = useState(false);
   const history=useHistory();
+  //
+  const isLogin= useSelector((state)=>state.authenticate.isLogin)
+  const dispatch=useDispatch();
   //Inputs
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
   //
   const loginHandler = () => {
-    setIsLogin((prevState) => {
-      return !prevState;
-    });
+    dispatch(authenticateActions.loginHandler())
   };
   //
   const submitHandler = (e) => {
@@ -49,15 +51,15 @@ const SignUP = () => {
         }
       })
       .then((data) => {
-        // dispatch(Authactions.setToken(data.idToken));
+        dispatch(authenticateActions.setToken(data.idToken));
         // splitting email and removing '.com' from it
-        const email = obj.email.split("@")[0];
-        // dispatch(Authactions.setEmailId(email));
+        const storeEmail = obj.email.split("@")[0];
+        dispatch(authenticateActions.setEmailId(storeEmail));
         console.log("added token,email to store");
         localStorage.setItem("token", data.idToken);
-        localStorage.setItem("email", email);
+        localStorage.setItem("email", storeEmail);
         console.log("added token to localStorage");
-        console.log(data.idToken);
+        // console.log(data.idToken);
         console.log("user registered successfully");
         history.replace("/home");
       })

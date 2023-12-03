@@ -1,23 +1,28 @@
 import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import MailList from "./MailList";
+import { useDispatch, useSelector } from "react-redux";
+import { mailDataActions } from "../ReduxStore/Store";
 
 const Inbox = () => {
   const email = localStorage.getItem("email");
-
-  const [inputMail, setInputMail] = useState([]);
+  const mailItems=useSelector((state)=>state.mailData.mailItems);
+  // const email=useSelector((state)=>state.authenticate.emailId)
+  const dispatch=useDispatch();
+  //
+  // const [inputMail, setInputMail] = useState([]);
   useEffect(() => {
     getHandler();
   }, []);
   //
-  const inputMailHandler = (itemsArray) => {
-    setInputMail(itemsArray);
-  };
+  // const inputMailHandler = (itemsArray) => {
+  //   setInputMail(itemsArray);
+  // };
   //
-  const emailer="Srikanth"
+  // const emailer="Srikanth"
   const getHandler = () => {
     fetch(
-      `https://authentication-react-45852-default-rtdb.firebaseio.com/receivedMails/${emailer}.json`,
+      `https://authentication-react-45852-default-rtdb.firebaseio.com/receivedMails/${email}.json`,
       {
         method: "GET",
       }
@@ -49,7 +54,8 @@ const Inbox = () => {
               }
             );
             console.log("innerObjects", innerObjectsArray);
-            inputMailHandler(innerObjectsArray);
+            dispatch(mailDataActions.setMailItems(innerObjectsArray))
+            // inputMailHandler(innerObjectsArray);
           }
         } else {
           console.log("There are no mails");
@@ -63,11 +69,11 @@ const Inbox = () => {
   return (
     <>
       <Container className="w-75">
-        {inputMail.length === 0 && (
+        {mailItems.length === 0 && (
           <h5 className="text-center">There are no mails for you</h5>
         )}
-        {inputMail.length > 0 && <h5>Your Mails are here</h5>}
-        {inputMail.length > 0 && <MailList items={inputMail} />}
+        {mailItems.length > 0 && <h5>Your Mails are here</h5>}
+        {mailItems.length > 0 && <MailList />}
       </Container>
     </>
   );

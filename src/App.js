@@ -6,7 +6,7 @@ import MailSender from "./components/mail_sender/MailSender";
 import MailViewer from "./components/inbox/MailView";
 
 function App() {
-  const { itemId } = useParams();
+  // const { itemId } = useParams();
   return (
     <>
       <Route exact path="/">
@@ -18,7 +18,7 @@ function App() {
       <Route path="/compose">
         <MailSender />
       </Route>
-      <Route path={`/mailView/:${itemId}`}>
+      <Route path={`/mailView/:itemId`}>
         <MailViewer />
       </Route>
 
