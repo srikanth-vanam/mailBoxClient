@@ -3,16 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import { mailDataActions } from "../ReduxStore/Store";
 // import MailViewer from "./MailView";
-const MailList = () => {
+const MailList = (props) => {
   //
   const history = useHistory();
   const mailIsRead = useSelector((state) => state.mailData.mailIsRead);
-  const mailItems = useSelector((state) => state.mailData.mailItems);
+  // const mailItems = useSelector((state) => state.mailData.mailItems);
   const dispatch = useDispatch();
+  //
+  const mode=props.receivedBool?'receivedMails':'sentMails';
   const handleItemClick = (id) => {
     // Navigate to the MailView route and pass the item in the state
     history.push({
-      pathname: `/mailView/${id}`,
+      pathname: `/mailView/${id}/${mode}`,
       // state: { item: item },
     });
     // need to work on mailReader, we must have it for each item
@@ -29,7 +31,7 @@ const MailList = () => {
         }}
       >
         <ul className="list-unstyled">
-          {mailItems.map((item) => (
+          {props.items.map((item) => (
             <li
               key={item.id}
               className="text-dark m-1 bg-light"
@@ -55,7 +57,8 @@ const MailList = () => {
                     backgroundColor: mailIsRead ? "white" : "blue",
                   }}
                 ></div>
-                <p>{item.from}</p>
+                {props.receivedBool && <p>from:{item.from}</p>}
+                {!props.receivedBool && <p>to:{item.to}</p>}
                 <p> {item.subject}</p>
               </div>
             </li>

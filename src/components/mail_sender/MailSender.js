@@ -10,6 +10,7 @@ import {
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import SideBar from "../sidebar/Sidebar";
+import Header from "../header/Header";
 
 const MailSender = () => {
   const [editorState, setEditorState] = useState(null);
@@ -70,8 +71,7 @@ const MailSender = () => {
 
   return (
     <>
-      <h3 className="text-center m-1">Welcome to your mail Box</h3>
-      <hr />
+      <Header />
       <Container fluid className="d-flex mt-3" style={{ height: "87vh" }}>
         <SideBar />
         <div className="mt-1 m-auto w-75 h-100">

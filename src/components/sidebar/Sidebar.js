@@ -14,11 +14,14 @@ const SideBar = () => {
           <NavLink to="/home" className="text-dark text-decoration-none p-2">
             Inbox
           </NavLink>
-          <NavLink to="" className="text-dark text-decoration-none p-2">
-            Unread
+          <NavLink to="/sent" className="text-dark text-decoration-none p-2">
+            Sent
           </NavLink>
           <NavLink to="" className="text-dark text-decoration-none p-2">
             Starred
+          </NavLink>
+          <NavLink to="" className="text-dark text-decoration-none p-2">
+            Unread
           </NavLink>
         </Navbar>
       </Card>

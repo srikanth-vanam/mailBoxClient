@@ -21,7 +21,8 @@ const authSlice = createSlice({
 });
 
 const initialMailState = {
-  mailItems: [],
+  sentMailItems: [],
+  receivedMailItems:[],
   mailIsRead: false,
 };
 const mailDataSlice = createSlice({
@@ -31,9 +32,13 @@ const mailDataSlice = createSlice({
     mailReader(state, action) {
       state.mailIsRead = action.payload;
     },
-    setMailItems(state,action){
-      state.mailItems=action.payload;
+    setSentMailItems(state,action){
+      state.sentMailItems=action.payload;
+    },
+    setReceivedMailItems(state,action){
+      state.receivedMailItems=action.payload;
     }
+
   },
 });
 

@@ -9,7 +9,7 @@ import Header from "../header/Header";
 
 const Home = () => {
   //
-  const email=useSelector((state)=>state.authenticate.emailId);
+  // const email=useSelector((state)=>state.authenticate.emailId);
   const dispatch=useDispatch();
   useEffect(()=>{
     const localEmail=localStorage.getItem('email');
