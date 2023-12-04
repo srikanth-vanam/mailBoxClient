@@ -3,6 +3,7 @@ import { Container } from "react-bootstrap";
 import MailList from "../mailList/MailList";
 import { useDispatch, useSelector } from "react-redux";
 import { mailDataActions } from "../ReduxStore/Store";
+import useFetch from "../customHooks/useFetch";
 
 const Inbox = () => {
   // const email = localStorage.getItem("email");
@@ -22,58 +23,49 @@ const Inbox = () => {
   //
   // const emailer="Srikanth"
   const getHandler = () => {
-    fetch(
-      `https://authentication-react-45852-default-rtdb.firebaseio.com/receivedMails/${email}.json`,
-      {
-        method: "GET",
+    const url = `https://authentication-react-45852-default-rtdb.firebaseio.com/receivedMails/${email}.json`;
+    const options = {
+      method: "GET",
+    };
+    try {
+      const { data, error } = useFetch(url, options);
+
+      console.log("inside get handler", data);
+      let mailItems = [];
+      let inboxMailsCount = 0;
+      if (data) {
+        // data is an object of Objects key is username, value is another object of Objects that contains mail Details
+        // value Strucute is --> key is fireBase id, Value is mailObject(to,body subject,from)
+        for (const key in data) {
+          console.log("key is", key);
+          console.log("value is", data[key]);
+          const item = data[key]; // item is objectOfObjects
+          console.log("item object is", item);
+          // code to iterate over keys of objOfObj's
+          const innerObjectsArray = Object.keys(item).map((innerObjectKey) => {
+            const innerObjectValue = item[innerObjectKey];
+            // adding id field to the mailObject and storing the simple mailObject
+            innerObjectValue.id = innerObjectKey;
+            // reading the mrkAsRead field
+            if (innerObjectValue.markAsRead === false) {
+              inboxMailsCount += 1;
+            }
+            return innerObjectValue;
+          });
+          mailItems.push(...innerObjectsArray);
+          console.log("innerObjects", innerObjectsArray);
+          // inputMailHandler(innerObjectsArray);
+        }
+      } else {
+        console.log("There are no mails");
       }
-    )
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("cannot post data to database");
-        } else {
-          return res.json();
-        }
-      })
-      .then((data) => {
-        console.log("inside get handler", data);
-        let mailItems = [];
-        let inboxMailsCount=0;
-        if (data) {
-          // data is an object of Objects key is username, value is another object of Objects that contains mail Details
-          // value Strucute is --> key is fireBase id, Value is mailObject(to,body subject,from)
-          for (const key in data) {
-            console.log("key is", key);
-            console.log("value is", data[key]);
-            const item = data[key]; // item is objectOfObjects
-            console.log("item object is", item);
-            // code to iterate over keys of objOfObj's
-            const innerObjectsArray = Object.keys(item).map(
-              (innerObjectKey) => {
-                const innerObjectValue = item[innerObjectKey];
-                // adding id field to the mailObject and storing the simple mailObject
-                innerObjectValue.id = innerObjectKey;
-                // reading the mrkAsRead field
-                if(innerObjectValue.markAsRead===false){
-                  inboxMailsCount+=1;
-                }
-                return innerObjectValue;
-              }
-            );
-            mailItems.push(...innerObjectsArray);
-            console.log("innerObjects", innerObjectsArray);
-            // inputMailHandler(innerObjectsArray);
-          }
-        } else {
-          console.log("There are no mails");
-        }
-        dispatch(mailDataActions.setReceivedMailItems(mailItems));
-        console.log("mails count",inboxMailsCount);
-        dispatch(mailDataActions.setUnreadMailsCount(inboxMailsCount));
-      })
-      .catch((err) => {
-        alert(err.message);
-      });
+      dispatch(mailDataActions.setReceivedMailItems(mailItems));
+      console.log("mails count", inboxMailsCount);
+      dispatch(mailDataActions.setUnreadMailsCount(inboxMailsCount));
+    } catch (error) {
+      // alert(error.message);
+      throw  error;
+    }
   };
 
   return (
