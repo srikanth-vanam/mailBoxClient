@@ -16,9 +16,9 @@ const Inbox = () => {
     getHandler();
     // Set up interval to fetch data every 2 seconds
     const intervalId = setInterval(getHandler, 2000);
-    // Clean up the interval when the component is unmounted
+    // // Clean up the interval when the component is unmounted
     return () => clearInterval(intervalId);
-  }, [email, dispatch]);
+  }, [email]);
   //
   // const emailer="Srikanth"
   const getHandler = () => {
@@ -38,6 +38,7 @@ const Inbox = () => {
       .then((data) => {
         console.log("inside get handler", data);
         let mailItems = [];
+        let inboxMailsCount=0;
         if (data) {
           // data is an object of Objects key is username, value is another object of Objects that contains mail Details
           // value Strucute is --> key is fireBase id, Value is mailObject(to,body subject,from)
@@ -52,6 +53,10 @@ const Inbox = () => {
                 const innerObjectValue = item[innerObjectKey];
                 // adding id field to the mailObject and storing the simple mailObject
                 innerObjectValue.id = innerObjectKey;
+                // reading the mrkAsRead field
+                if(innerObjectValue.markAsRead===false){
+                  inboxMailsCount+=1;
+                }
                 return innerObjectValue;
               }
             );
@@ -63,6 +68,8 @@ const Inbox = () => {
           console.log("There are no mails");
         }
         dispatch(mailDataActions.setReceivedMailItems(mailItems));
+        console.log("mails count",inboxMailsCount);
+        dispatch(mailDataActions.setUnreadMailsCount(inboxMailsCount));
       })
       .catch((err) => {
         alert(err.message);

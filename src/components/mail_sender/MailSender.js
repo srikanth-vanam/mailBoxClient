@@ -52,6 +52,7 @@ const MailSender = () => {
       to: receiver,
       subject: subjectInputRef.current.value,
       body: editorState ? editorState.getCurrentContent().getPlainText() : "", // Extract plain text from the editor state
+      markAsRead:false,
     };
     console.log(mailObj);
 
