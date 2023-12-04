@@ -1,13 +1,10 @@
-// import { useState } from "react";
+import { useState } from "react";
 import { useEffect } from "react";
 
 const useFetch = (url, options) => {
-  // const [data, setData] = useState(null);
-  // const [error, setError] = useState(null);
-  const resultObj={
-    data:null,
-    error:null,
-  };
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  
   useEffect(() => {
     //
     const fetchData = async () => {
@@ -17,16 +14,15 @@ const useFetch = (url, options) => {
           throw new Error("response not ok!");
         }
         let result = await response.json();
-        resultObj.data=result;
-        // setData(result);
+        setData(result);
       } catch (err) {
-        resultObj.error=err
-        // setError(err);
+        setError(err);
       }
     };
     fetchData();
   }, [url, options]);
-  return resultObj;
+  console.log("data in useFetch is", data);
+  return { data, error };
 };
 
 export default useFetch;
