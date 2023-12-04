@@ -38,7 +38,6 @@ const mailDataSlice = createSlice({
     setReceivedMailItems(state,action){
       state.receivedMailItems=action.payload;
     }
-
   },
 });
 

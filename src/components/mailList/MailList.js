@@ -2,6 +2,7 @@ import { Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import { mailDataActions } from "../ReduxStore/Store";
+import React from "react";
 // import MailViewer from "./MailView";
 const MailList = (props) => {
   //
@@ -10,7 +11,7 @@ const MailList = (props) => {
   // const mailItems = useSelector((state) => state.mailData.mailItems);
   const dispatch = useDispatch();
   //
-  const mode=props.receivedBool?'receivedMails':'sentMails';
+  const mode = props.receivedBool ? "receivedMails" : "sentMails";
   const handleItemClick = (id) => {
     // Navigate to the MailView route and pass the item in the state
     history.push({
@@ -18,7 +19,7 @@ const MailList = (props) => {
       // state: { item: item },
     });
     // need to work on mailReader, we must have it for each item
-    dispatch(mailDataActions.mailReader(true));
+    // dispatch(mailDataActions.mailReader(true));
   };
   //
   return (
@@ -69,4 +70,4 @@ const MailList = (props) => {
   );
 };
 
-export default MailList;
+export default React.memo(MailList);

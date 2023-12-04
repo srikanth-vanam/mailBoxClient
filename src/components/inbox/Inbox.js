@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Container } from "react-bootstrap";
 import MailList from "../mailList/MailList";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,7 +14,11 @@ const Inbox = () => {
   //
   useEffect(() => {
     getHandler();
-  }, [email]);
+    // Set up interval to fetch data every 2 seconds
+    const intervalId = setInterval(getHandler, 2000);
+    // Clean up the interval when the component is unmounted
+    return () => clearInterval(intervalId);
+  }, [email, dispatch]);
   //
   // const emailer="Srikanth"
   const getHandler = () => {
@@ -80,4 +84,4 @@ const Inbox = () => {
   );
 };
 
-export default Inbox;
+export default React.memo(Inbox);
