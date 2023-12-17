@@ -80,6 +80,7 @@ const SignUP = () => {
             placeholder="Enter Email"
             required
             ref={emailInputRef}
+            name="email"
           ></FormControl>
           <FormLabel htmlFor="password">Password</FormLabel>
           <FormControl
@@ -87,6 +88,7 @@ const SignUP = () => {
             placeholder="Enter Password"
             ref={passwordInputRef}
             required
+            name="password"
           ></FormControl>
           {!isLogin ? (
             <>
@@ -94,6 +96,7 @@ const SignUP = () => {
               <FormControl
                 required
                 placeholder="Re-type Password"
+                name="c-pswd"
               ></FormControl>
             </>
           ) : (

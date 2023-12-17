@@ -99,7 +99,6 @@ const MailList = (props) => {
                       height: "10px",
                       width: "10px",
                       borderRadius: "10px",
-                      // backgroundColor: item.markAsRead ? "white" : "blue",
                     }}
                   ></div>
                 )}
